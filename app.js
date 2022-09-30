@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 const express = require('express');
 const app = express();
 const mongoose  = require('mongoose');
@@ -5,6 +8,7 @@ const path = require('path');
 const Product = require('./model/product');
 const seedDB = require('./seed');
 const methodOverride = require('method-override');
+
 //yahan se flash and authentication ka shuru hai
 const session = require('express-session');
 const flash  = require('connect-flash');
@@ -19,27 +23,27 @@ const User = require('./model/user');
 const productRoutes = require('./routes/product'); 
 const authRoutes = require('./routes/auth');
 
-
+const dburl =process.env.DB_URL;
 
 //conecting dbs
-mongoose.connect('mongodb://localhost:27017/codingblocks', // shopApp naam ka database hoga to conect hojaega else create hojjega
-            {useNewUrlParser: true, 
-             useUnifiedTopology: true,
-             useFindAndModify:false,
-             useCreateIndex:true
-            })
+mongoose.connect(dburl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+})
             .then(()=>{
                 console.log("mongoose DB connected")
             })
 
-            
+
             .catch(err=>{
                 console.log("mongoose DB didnot connect");
                 console.log(err);
             })
 
             //SEEDING DBS
-            // seedDB();
+            // 
+             seedDB();
 
 
 app.set('view engine' , 'ejs');
@@ -99,6 +103,9 @@ app.use(authRoutes);
 
 
 //landing page
+app.get('/', (req, res) => {
+    res.render('products/home');
+})
 app.get('/home',(req,res)=>{
     res.render('products/home');
 })
