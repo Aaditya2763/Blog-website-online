@@ -111,7 +111,9 @@ app.get('/home',(req,res)=>{
 })
 
 
+const port = process.env.PORT || 3000;
 
-app.listen(3000,()=>{
-    console.log("server running at port 3000");
-}) 
+
+app.listen(port,()=>{
+  console.log(`server started at port ${port}`);
+});
